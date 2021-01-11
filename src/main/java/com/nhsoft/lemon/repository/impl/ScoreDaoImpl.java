@@ -39,7 +39,7 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
     }
 
     @Override
-    public List<TeacherExtend> listMaxMinAvgScore(Long teachId, String year) {
+    public List<TeacherExtend> listMaxMinAvg(Long teachId, String year) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TeacherExtend> query = criteriaBuilder.createQuery(TeacherExtend.class);
         Root<Score> root = query.from(Score.class);
@@ -60,7 +60,7 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
     }
 
     @Override
-    public List<TeacherExtend> listAllMaxMinAvgScore(String year) {
+    public List<TeacherExtend> listAllMaxMinAvg(String year) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TeacherExtend> query = criteriaBuilder.createQuery(TeacherExtend.class);
         Root<Score> root = query.from(Score.class);
@@ -79,7 +79,7 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
     }
 
     @Override
-    public List<ScoreExtend> listAllScore(int pageNo,int pageSize) {
+    public List<ScoreExtend> listAll(int pageNo, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScoreExtend> query = criteriaBuilder.createQuery(ScoreExtend.class);
         Root<Score> root = query.from(Score.class);

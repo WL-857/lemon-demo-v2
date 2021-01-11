@@ -35,10 +35,10 @@ public class StudentServiceImpl implements StudentService {
     private ObjectMapper objectMapper;
 
     @Override
-    public List<Student> listAllStudent(int pageNo, int pageSize) {
+    public List<Student> listAll(int pageNo, int pageSize) {
         PageUtil pageUtil = new PageUtil();
         PageUtil check = pageUtil.check(pageNo, pageSize);
-        List<Student> students = studentDao.listAllStudent(check.getOffset(),check.getRows());
+        List<Student> students = studentDao.listAll(check.getOffset(), check.getRows());
         return students;
     }
 
@@ -97,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
         }
         if (studentDao.readStudent(id) != null) {
             studentDao.deleteStudent(id);
-        }else{
+        } else {
             throw new GlobalException("数据库中不存在该条记录");
         }
     }
@@ -118,7 +118,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student updateStudent(Student student) {
         String studentKey = RedisKey.STUDENT_KEY + student.getStudentId();
-        redisTemplate.opsForValue().set(studentKey,student);
+        redisTemplate.opsForValue().set(studentKey, student);
         return studentDao.updateStudent(student);
     }
 }

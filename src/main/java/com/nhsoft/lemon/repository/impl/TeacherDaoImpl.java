@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class TeacherDaoImpl extends BaseDao implements TeacherDao {
     @Override
-    public List<Teacher> listAllTeacher(int pageNo,int pageSize) {
+    public List<Teacher> listAll(int pageNo, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Teacher> query = criteriaBuilder.createQuery(Teacher.class);
         query.from(Teacher.class);
@@ -29,7 +29,7 @@ public class TeacherDaoImpl extends BaseDao implements TeacherDao {
 
     @Override
     public Teacher readTeacher(Long id) {
-        return entityManager.find(Teacher.class,id);
+        return entityManager.find(Teacher.class, id);
     }
 
     @Override

@@ -34,10 +34,10 @@ public class TeacherServiceImpl implements TeacherService {
     private ObjectMapper objectMapper;
 
     @Override
-    public List<Teacher> listAllTeacher(int pageNo, int pageSize) {
+    public List<Teacher> listAll(int pageNo, int pageSize) {
         PageUtil pageUtil = new PageUtil();
         PageUtil check = pageUtil.check(pageNo, pageSize);
-        List<Teacher> teachers = teacherDao.listAllTeacher(check.getOffset(),check.getRows());
+        List<Teacher> teachers = teacherDao.listAll(check.getOffset(), check.getRows());
         return teachers;
     }
 
@@ -49,7 +49,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher saveTeacher(Teacher teacher) {
         Teacher save = teacherDao.saveTeacher(teacher);
-        if(save == null){
+        if (save == null) {
             throw new GlobalException("数据库中已存在该条记录");
         }
         Long teachId = save.getTeacherId();
@@ -58,8 +58,8 @@ public class TeacherServiceImpl implements TeacherService {
 
         try {
             String teacherJson = objectMapper.writeValueAsString(teacher);
-            if(teacherValue == null){
-                redisTemplate.opsForValue().set(teacherKey,teacherJson);
+            if (teacherValue == null) {
+                redisTemplate.opsForValue().set(teacherKey, teacherJson);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -89,7 +89,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void deleteTeacher(Long id) {
-        String  teacherKey = RedisKey.TEACHER_KEY + id;
+        String teacherKey = RedisKey.TEACHER_KEY + id;
         Object value = redisTemplate.opsForValue().get(teacherKey);
         if (value != null) {
             redisTemplate.delete(teacherKey);
@@ -97,7 +97,7 @@ public class TeacherServiceImpl implements TeacherService {
         if (teacherDao.readTeacher(id) != null) {
 
             teacherDao.deleteTeacher(id);
-        }else {
+        } else {
             throw new GlobalException("数据库中没有该条记录");
         }
     }

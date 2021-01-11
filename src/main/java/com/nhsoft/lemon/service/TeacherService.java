@@ -20,7 +20,7 @@ public interface TeacherService{
      * @param pageSize
      * @return
      */
-    List<Teacher> listAllTeacher(int pageNo, int pageSize);
+    List<Teacher> listAll(int pageNo, int pageSize);
 
     /**
      * 根据学生id查询教师信息

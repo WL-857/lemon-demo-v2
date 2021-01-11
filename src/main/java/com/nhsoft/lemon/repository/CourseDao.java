@@ -24,7 +24,7 @@ public interface CourseDao {
      * @param pageSize
      * @return
      */
-    List<Course> listAllCourse(int pageNo,int pageSize);
+    List<Course> listAll(int pageNo,int pageSize);
 
     /**
      * 根据id查询课程

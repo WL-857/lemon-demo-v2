@@ -43,10 +43,10 @@ public class ScoreServiceImpl implements ScoreService {
     private ObjectMapper objectMapper;
 
     @Override
-    public List<ScoreExtend> listAllScore(int pageNo, int pageSize) {
+    public List<ScoreExtend> listAll(int pageNo, int pageSize) {
         PageUtil pageUtil = new PageUtil();
         PageUtil check = pageUtil.check(pageNo, pageSize);
-        List<ScoreExtend> scoreExtends = scoreDao.listAllScore(check.getOffset(),check.getRows());
+        List<ScoreExtend> scoreExtends = scoreDao.listAll(check.getOffset(), check.getRows());
         return scoreExtends;
     }
 
@@ -56,34 +56,34 @@ public class ScoreServiceImpl implements ScoreService {
             throw new GlobalException("参数为空");
         }
         List<ScoreExtend> scoreExtends = scoreDao.listStudentAllGrade(stuNo, time);
-        if(CollectionUtils.isEmpty(scoreExtends)){
+        if (CollectionUtils.isEmpty(scoreExtends)) {
             throw new GlobalException("数据库中没有记录");
         }
         return scoreExtends;
     }
 
     @Override
-    public List<TeacherExtend> listMaxMinAvgScore(Long teachId, String year) {
+    public List<TeacherExtend> listMaxMinAvg(Long teachId, String year) {
 
-            if (ObjectUtils.isEmpty(teachId) || StringUtils.isEmpty(year)) {
-                throw new GlobalException("参数为空");
-            }
-            List<TeacherExtend> scoreExtends = scoreDao.listMaxMinAvgScore(teachId, year);
-            if(CollectionUtils.isEmpty(scoreExtends)){
-                throw new GlobalException("数据库中没有记录");
-            }
-            return scoreExtends;
+        if (ObjectUtils.isEmpty(teachId) || StringUtils.isEmpty(year)) {
+            throw new GlobalException("参数为空");
+        }
+        List<TeacherExtend> scoreExtends = scoreDao.listMaxMinAvg(teachId, year);
+        if (CollectionUtils.isEmpty(scoreExtends)) {
+            throw new GlobalException("数据库中没有记录");
+        }
+        return scoreExtends;
 
     }
 
 
     @Override
-    public List<TeacherExtend> listAllMaxMinAvgScore(String year) {
+    public List<TeacherExtend> listAllMaxMinAvg(String year) {
         if (StringUtils.isEmpty(year)) {
             throw new GlobalException("参数为空");
         }
-        List<TeacherExtend> teacherExtends = scoreDao.listAllMaxMinAvgScore(year);
-        if(CollectionUtils.isEmpty(teacherExtends)){
+        List<TeacherExtend> teacherExtends = scoreDao.listAllMaxMinAvg(year);
+        if (CollectionUtils.isEmpty(teacherExtends)) {
             throw new GlobalException("数据库中没有记录");
         }
         return teacherExtends;
@@ -96,7 +96,7 @@ public class ScoreServiceImpl implements ScoreService {
             throw new GlobalException("数据库中已存在该记录");
         }
         Long scoId = save.getScoreId();
-        String scoreKey = RedisKey. SCORE_KEY+ scoId;
+        String scoreKey = RedisKey.SCORE_KEY + scoId;
         Object scoreValue = redisTemplate.opsForValue().get(scoreKey);
 
         try {
@@ -140,7 +140,7 @@ public class ScoreServiceImpl implements ScoreService {
         }
         if (scoreDao.readScore(id) != null) {
             i = scoreDao.deleteScore(id);
-        }else{
+        } else {
             throw new GlobalException("数据库中不存在该条记录");
         }
         return i;
@@ -161,14 +161,14 @@ public class ScoreServiceImpl implements ScoreService {
     @Override
     public Score updateScore(Score score) {
         String scoreKey = RedisKey.SCORE_KEY + score.getCourseId();
-        redisTemplate.opsForValue().set(scoreKey,score);
+        redisTemplate.opsForValue().set(scoreKey, score);
         return scoreDao.updateScore(score);
     }
 
     @Override
     public ScoreExtend readScore(Long id) {
         ScoreExtend scoreExtend = scoreDao.readScore(id);
-        if(ObjectUtils.isEmpty(scoreExtend)){
+        if (ObjectUtils.isEmpty(scoreExtend)) {
             throw new GlobalException("数据库中没有该条记录");
         }
         return scoreExtend;

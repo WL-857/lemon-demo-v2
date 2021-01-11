@@ -23,7 +23,7 @@ import java.util.zip.CheckedOutputStream;
 public class CourseDaoImpl extends BaseDao implements CourseDao {
 
     @Override
-    public List<Course> listAllCourse(int pageNo, int pageSize) {
+    public List<Course> listAll(int pageNo, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Course> query = criteriaBuilder.createQuery(Course.class);
         query.from(Course.class);

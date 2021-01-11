@@ -2,6 +2,7 @@ package com.nhsoft.lemon.controller;
 
 import com.nhsoft.lemon.dto.CourseDTO;
 import com.nhsoft.lemon.dto.TeacherCourseDTO;
+import com.nhsoft.lemon.exception.GlobalException;
 import com.nhsoft.lemon.model.Course;
 import com.nhsoft.lemon.model.TeacherCourse;
 import com.nhsoft.lemon.model.extend.TeacherExtend;
@@ -35,87 +36,61 @@ public class TeacherCourseController {
     @GetMapping("/list/{pageNo}/{pageSize}")
     public ResponseMessage listAllTeacherCourse(@PathVariable(name = "pageNo", required = true) int pageNo,
                                                 @PathVariable(name = "pageSize", required = true) int pageSize) {
-        log.info("listAllTeacherCourse方法开始执行,参数为：pageNo=" + pageNo + ",pageSize=" + pageSize);
-
-        if (pageNo < 0) {
-            pageNo = 1;
-        }
-        if (pageSize <= 0) {
-            pageSize = 5;
-        }
         List<TeacherExtend> teacherCourses = teacherCourseService.list(pageNo, pageSize);
         if (CollectionUtils.isEmpty(teacherCourses)) {
-            return ResponseMessage.error("数据为空");
+            throw new GlobalException("数据为空");
         }
         List<TeacherCourseDTO> teacherCourseDTOS = CopyUtil.toList(teacherCourses, TeacherCourseDTO.class);
-        log.info("方法执行结束，方法返回值为：" + teacherCourseDTOS);
         return ResponseMessage.success("courseDTOS", teacherCourseDTOS);
     }
 
     @ApiOperation("添加教师课程")
     @PostMapping("/save")
     public ResponseMessage saveTeacherCourse(@RequestBody TeacherCourseDTO teacherCourseDTO) {
-        log.info("saveTeacherCourse方法开始执行,参数为：teacherCourseDTO=" + teacherCourseDTO);
         if (ObjectUtils.isEmpty(teacherCourseDTO)) {
-            return ResponseMessage.error("参数为空，请输入参数");
+            throw new GlobalException("参数为空");
         }
         TeacherCourse teacherCourse = CopyUtil.to(teacherCourseDTO, TeacherCourse.class);
-
         TeacherCourse saveTeacherCourse = teacherCourseService.save(teacherCourse);
         if (saveTeacherCourse == null) {
-            return ResponseMessage.error("添加失败");
+            throw new GlobalException("数据为空");
         }
-        log.info("saveTeacherCourse方法执行结束");
         return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("批量添加教师课程")
     @PostMapping(value = "/batchSave")
     public ResponseMessage batchSaveTeacherCourse(@RequestBody List<TeacherCourseDTO> teacherCourseDTOS) {
-        log.info("batchSaveTeacherCourse方法开始执行,参数为：teacherCourseDTOS=" + teacherCourseDTOS);
-
         if (CollectionUtils.isEmpty(teacherCourseDTOS)) {
-            return ResponseMessage.error("参数为空，请输入参数");
+            throw new GlobalException("参数为空");
         }
         List<TeacherCourse> teacherCourses = CopyUtil.toList(teacherCourseDTOS, TeacherCourse.class);
-
         List<TeacherCourse> saveTeacherCourse = teacherCourseService.batchSave(teacherCourses);
         if (CollectionUtils.isEmpty(saveTeacherCourse)) {
-            return ResponseMessage.error("添加失败");
+            throw new GlobalException("数据为空");
         }
-        log.info("batchSaveTeacherCourse方法执行结束");
-
         return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("删除教师课程")
     @DeleteMapping(value = "/delete/")
     public ResponseMessage deleteTeacherCourse(@RequestBody TeacherCourseDTO teacherCourseDTO) {
-        log.info("deleteTeacherCourse方法开始执行,参数为：teacherCourseDTO=" + teacherCourseDTO);
-
         if (ObjectUtils.isEmpty(teacherCourseDTO)) {
-            return ResponseMessage.error("参数为空，请输入参数");
+            throw new GlobalException("参数为空");
         }
         TeacherCourse teacherCourse = CopyUtil.to(teacherCourseDTO, TeacherCourse.class);
         teacherCourseService.delete(teacherCourse);
-        log.info("deleteTeacherCourse方法执行结束");
-
         return ResponseMessage.success("删除成功");
     }
 
     @ApiOperation("批量删除教师课程")
     @PostMapping(value = "/delete")
     public ResponseMessage batchDeleteTeacherCourse(List<TeacherCourseDTO> teacherCourseDTOS) {
-        log.info("batchDeleteTeacherCourse方法开始执行,参数为：teacherCourseDTOS=" + teacherCourseDTOS);
-
         if (CollectionUtils.isEmpty(teacherCourseDTOS)) {
-            return ResponseMessage.error("参数为空，请输入参数");
+            throw new GlobalException("数据为空");
         }
         List<TeacherCourse> teacherCourses = CopyUtil.toList(teacherCourseDTOS, TeacherCourse.class);
         teacherCourseService.batchDelete(teacherCourses);
-        log.info("batchDeleteTeacherCourse方法执行结束");
         return ResponseMessage.success("删除成功");
     }
-
-
 }

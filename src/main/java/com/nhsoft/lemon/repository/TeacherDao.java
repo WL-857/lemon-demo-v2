@@ -19,7 +19,7 @@ public interface TeacherDao {
      * @param pageSize
      * @return
      */
-    List<Teacher> listAllTeacher(int pageNo,int pageSize);
+    List<Teacher> listAll(int pageNo,int pageSize);
 
 
     /**

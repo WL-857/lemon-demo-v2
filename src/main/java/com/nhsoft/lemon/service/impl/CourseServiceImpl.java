@@ -37,27 +37,27 @@ public class CourseServiceImpl implements CourseService {
     private ObjectMapper objectMapper;
 
     @Override
-    public List<Course> listAllCourse(int pageNo, int pageSize) {
+    public List<Course> listAll(int pageNo, int pageSize) {
         PageUtil pageUtil = new PageUtil();
         PageUtil check = pageUtil.check(pageNo, pageSize);
-        List<Course> courses = courseDao.listAllCourse(check.getOffset(), check.getRows());
+        List<Course> courses = courseDao.listAll(check.getOffset(), check.getRows());
         return courses;
     }
 
     @Override
     public Course readCourse(Long id) {
         Course course = courseDao.readCourse(id);
-        if(ObjectUtils.isEmpty(course)){
+        if (ObjectUtils.isEmpty(course)) {
             throw new GlobalException("数据库中没有该记录");
         }
-        return course ;
+        return course;
     }
 
     @Override
     public Course saveCourse(Course course) {
         Course save = courseDao.saveCourse(course);
         if (save == null) {
-            throw  new GlobalException("数据库中已存在该记录");
+            throw new GlobalException("数据库中已存在该记录");
         }
         Long couId = save.getCourseId();
         String courseKey = RedisKey.COURSE_KEY + couId;
@@ -103,7 +103,7 @@ public class CourseServiceImpl implements CourseService {
         }
         if (courseDao.readCourse(id) != null) {
             courseDao.deleteCourse(id);
-        }else{
+        } else {
             throw new GlobalException("数据库中不存在该条记录");
         }
     }
@@ -123,7 +123,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course updateCourse(Course course) {
         String courseKey = RedisKey.COURSE_KEY + course.getCourseId();
-        redisTemplate.opsForValue().set(courseKey,course);
+        redisTemplate.opsForValue().set(courseKey, course);
         return courseDao.updateCourse(course);
     }
 }

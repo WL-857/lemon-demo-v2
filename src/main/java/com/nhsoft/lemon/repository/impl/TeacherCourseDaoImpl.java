@@ -56,7 +56,7 @@ public class TeacherCourseDaoImpl extends BaseDao implements TeacherCourseDao {
         String sql = "delete from TeacherCourse where courseId = :couId and teacherId = :teachId";
         Query query = entityManager.createQuery(sql);
         query.setParameter("couId", teacherCourse.getCourseId());
-        query.setParameter("teachId",teacherCourse.getTeacherId());
+        query.setParameter("teachId", teacherCourse.getTeacherId());
         int i = query.executeUpdate();
         return i;
     }
@@ -67,7 +67,7 @@ public class TeacherCourseDaoImpl extends BaseDao implements TeacherCourseDao {
         Query query = entityManager.createQuery(sql);
         teacherCourses.forEach(teacherCourse -> {
             query.setParameter("couId", teacherCourse.getCourseId());
-            query.setParameter("teachId",teacherCourse.getTeacherId());
+            query.setParameter("teachId", teacherCourse.getTeacherId());
             query.executeUpdate();
         });
     }

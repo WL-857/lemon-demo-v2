@@ -18,7 +18,7 @@ public interface StudentService{
      * @param pageSize
      * @return
      */
-    List<Student> listAllStudent(int pageNo,int pageSize);
+    List<Student> listAll(int pageNo,int pageSize);
 
     /**
      * 根据学生id查询学生信息

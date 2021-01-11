@@ -19,7 +19,7 @@ public interface CourseService {
      * @return
      */
 
-    List<Course> listAllCourse(int pageNo, int pageSize);
+    List<Course> listAll(int pageNo, int pageSize);
 
     /**
      * 根据课程编号查询课程信息

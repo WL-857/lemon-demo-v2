@@ -21,7 +21,7 @@ public interface ScoreService {
      * @param pageSize
      * @return
      */
-    List<ScoreExtend> listAllScore(int pageNo, int pageSize);
+    List<ScoreExtend> listAll(int pageNo, int pageSize);
 
     /**
      * 根据学号获取学生所有的课程成绩
@@ -39,7 +39,7 @@ public interface ScoreService {
      * @param year
      * @return
      */
-    List<TeacherExtend> listMaxMinAvgScore(Long teachId, String year);
+    List<TeacherExtend> listMaxMinAvg(Long teachId, String year);
 
     /**
      * 查询学年所有学生每门学科的成绩最大值，最小值，平均值
@@ -47,7 +47,7 @@ public interface ScoreService {
      * @param year
      * @return
      */
-    List<TeacherExtend> listAllMaxMinAvgScore(String year);
+    List<TeacherExtend> listAllMaxMinAvg(String year);
 
     /**
      * 根据id查询分数信息

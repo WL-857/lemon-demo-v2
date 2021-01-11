@@ -36,11 +36,12 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
 
     @Resource(name = "objectMapper")
     private ObjectMapper objectMapper;
+
     @Override
     public List<TeacherExtend> list(int pageNo, int pageSize) {
         PageUtil pageUtil = new PageUtil();
         PageUtil check = pageUtil.check(pageNo, pageSize);
-        List<TeacherExtend> teacherCourses = teacherCourseDao.list(check.getOffset(),check.getRows());
+        List<TeacherExtend> teacherCourses = teacherCourseDao.list(check.getOffset(), check.getRows());
         return teacherCourses;
     }
 
