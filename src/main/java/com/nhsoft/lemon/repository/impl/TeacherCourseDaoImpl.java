@@ -20,7 +20,7 @@ import java.util.List;
 @Repository
 public class TeacherCourseDaoImpl extends BaseDao implements TeacherCourseDao {
     @Override
-    public List<TeacherExtend> listTeacherCourse(int pageNo, int pageSize) {
+    public List<TeacherExtend> list(int pageNo, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TeacherExtend> query = criteriaBuilder.createQuery(TeacherExtend.class);
         Root<Teacher> root = query.from(Teacher.class);
@@ -38,13 +38,13 @@ public class TeacherCourseDaoImpl extends BaseDao implements TeacherCourseDao {
     }
 
     @Override
-    public TeacherCourse saveTeacherCourse(TeacherCourse teacherCourse) {
+    public TeacherCourse save(TeacherCourse teacherCourse) {
         entityManager.persist(teacherCourse);
         return teacherCourse;
     }
 
     @Override
-    public List<TeacherCourse> batchSaveTeacherCourse(List<TeacherCourse> teacherCourses) {
+    public List<TeacherCourse> batchSave(List<TeacherCourse> teacherCourses) {
         teacherCourses.forEach(teacherCourse -> {
             entityManager.persist(teacherCourses);
         });
@@ -52,22 +52,22 @@ public class TeacherCourseDaoImpl extends BaseDao implements TeacherCourseDao {
     }
 
     @Override
-    public int deleteTeacherCourse(TeacherCourse teacherCourse) {
-        String sql = "delete from TeacherCourse where couId = :couId and teachId = :teachId";
+    public int delete(TeacherCourse teacherCourse) {
+        String sql = "delete from TeacherCourse where courseId = :couId and teacherId = :teachId";
         Query query = entityManager.createQuery(sql);
-        query.setParameter("couId", teacherCourse.getCouId());
-        query.setParameter("teachId",teacherCourse.getTeachId());
+        query.setParameter("couId", teacherCourse.getCourseId());
+        query.setParameter("teachId",teacherCourse.getTeacherId());
         int i = query.executeUpdate();
         return i;
     }
 
     @Override
-    public void batchDeleteTeacherCourse(List<TeacherCourse> teacherCourses) {
-        String sql = "delete from TeacherCourse where couId = :couId and teachId = :teachId";
+    public void batchDelete(List<TeacherCourse> teacherCourses) {
+        String sql = "delete from TeacherCourse where courseId = :couId and teacherId = :teachId";
         Query query = entityManager.createQuery(sql);
         teacherCourses.forEach(teacherCourse -> {
-            query.setParameter("couId", teacherCourse.getCouId());
-            query.setParameter("teachId",teacherCourse.getTeachId());
+            query.setParameter("couId", teacherCourse.getCourseId());
+            query.setParameter("teachId",teacherCourse.getTeacherId());
             query.executeUpdate();
         });
     }

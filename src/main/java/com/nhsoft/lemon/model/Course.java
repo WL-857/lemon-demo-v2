@@ -30,23 +30,23 @@ public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long couId;
+    private Long courseId;
 
     /**
      * 课程名称
      */
 
-    private String couName;
+    private String courseName;
 
     /**
      * 课程编号
      */
 
-    private String couNo;
+    private String courseNo;
 
     public Course(String couName, String couNo) {
-        this.couName = couName;
-        this.couNo = couNo;
+        this.courseName = couName;
+        this.courseNo = couNo;
     }
 
     @ManyToMany(cascade = CascadeType.ALL)

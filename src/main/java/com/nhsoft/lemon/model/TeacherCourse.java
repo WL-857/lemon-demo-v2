@@ -22,11 +22,11 @@ public class TeacherCourse implements Serializable {
      */
     @Id
     @Column(name = "t_id")
-    private Long teachId;
+    private Long teacherId;
     /**
      * 课程id
      */
     @Id
     @Column(name = "c_id")
-    private Long couId;
+    private Long courseId;
 }

@@ -54,7 +54,7 @@ public class CourseDaoImpl extends BaseDao implements CourseDao {
 
     @Override
     public int deleteCourse(Long id) {
-        String sql = "delete from Course where couId = :id";
+        String sql = "delete from Course where courseId = :id";
         Query query = entityManager.createQuery(sql);
         query.setParameter("id", id);
         int i = query.executeUpdate();
@@ -63,7 +63,7 @@ public class CourseDaoImpl extends BaseDao implements CourseDao {
 
     @Override
     public void batchDeleteCourse(List<Long> ids) {
-        String sql = "delete from Course where couId = :id";
+        String sql = "delete from Course where courseId = :id";
         Query query = entityManager.createQuery(sql);
         ids.forEach(id -> {
             query.setParameter("id", id);

@@ -28,19 +28,19 @@ public class Score implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long scoId;
+    private Long scoreId;
 
     /**
      * 学生id
      */
     @Column(name = "s_id")
-    private Long stuId;
+    private Long studentId;
 
     /**
      * 课程id
      */
     @Column(name = "c_id")
-    private Long couId;
+    private Long courseId;
 
     /**
      * 科目的成绩

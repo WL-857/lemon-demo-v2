@@ -48,7 +48,7 @@ public class TeacherDaoImpl extends BaseDao implements TeacherDao {
 
     @Override
     public int deleteTeacher(Long id) {
-        String sql = "delete from Teacher where teachId = :id";
+        String sql = "delete from Teacher where teacherId = :id";
         Query query = entityManager.createQuery(sql);
         query.setParameter("id", id);
         int i = query.executeUpdate();
@@ -57,7 +57,7 @@ public class TeacherDaoImpl extends BaseDao implements TeacherDao {
 
     @Override
     public void batchDeleteTeacher(List<Long> ids) {
-        String sql = "delete from Teacher where teachId = :id";
+        String sql = "delete from Teacher where teacherId = :id";
         Query query = entityManager.createQuery(sql);
         ids.forEach(id -> {
             query.setParameter("id", id);

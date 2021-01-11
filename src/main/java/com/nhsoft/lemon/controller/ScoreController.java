@@ -49,7 +49,7 @@ public class ScoreController {
         }
         List<ScoreDTO> scoreDTOS = CopyUtil.toList(scoreExtends, ScoreDTO.class);
         log.info("方法执行结束，方法返回值为：" + scoreDTOS);
-        return ResponseMessage.ok().put("courseDTOS", scoreDTOS);
+        return ResponseMessage.success("courseDTOS", scoreDTOS);
     }
 
     @ApiOperation("根据课程编号查询分数")
@@ -65,7 +65,7 @@ public class ScoreController {
         }
         ScoreDTO scoreDTO = CopyUtil.to(score, ScoreDTO.class);
         log.info("readCourse方法执行结束，方法返回值为：" + scoreDTO);
-        return ResponseMessage.ok().put("courseDTOS", scoreDTO);
+        return ResponseMessage.success("courseDTOS", scoreDTO);
     }
 
     @ApiOperation("添加分数")
@@ -82,7 +82,7 @@ public class ScoreController {
             return ResponseMessage.error("添加失败");
         }
         log.info("saveScore方法执行结束");
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("批量添加分数")
@@ -101,7 +101,7 @@ public class ScoreController {
         }
         log.info("batchSaveScore方法执行结束");
 
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("删除分数")
@@ -116,7 +116,7 @@ public class ScoreController {
         scoreService.deleteScore(id);
         log.info("deleteScore方法执行结束");
 
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 
     @ApiOperation("批量删除分数")
@@ -130,7 +130,7 @@ public class ScoreController {
 
         scoreService.batchDeleteScore(ids);
         log.info("batchDeleteScore方法执行结束");
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 
 

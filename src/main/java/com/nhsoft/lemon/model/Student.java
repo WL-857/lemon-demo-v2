@@ -30,31 +30,31 @@ public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long stuId;
+    private Long studentId;
 
     /**
      * 学生姓名
      */
 
-    private String stuName;
+    private String studentName;
 
     /**
      * 学生性别
      */
 
-    private Integer stuSex;
+    private Integer studentSex;
 
     /**
      * 学生学号
      */
 
-    private String stuNo;
+    private String studentNo;
 
     /**
      * 学生手机号
      */
 
-    private String stuPhone;
+    private String studentPhone;
 
     @ManyToMany(cascade = CascadeType.ALL)
     //joinColumn：当前类的主键，inverseJoinColumns：关联类的主键

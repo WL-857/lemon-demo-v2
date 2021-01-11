@@ -32,7 +32,6 @@ public class CourseController {
     @GetMapping("/list/{pageNo}/{pageSize}")
     public ResponseMessage listAllCourse(@PathVariable(name = "pageNo",required = true) int pageNo,
                                          @PathVariable(name = "pageSize",required = true) int pageSize) {
-        log.info("listAllCourse方法开始执行,参数为：pageNo=" + pageNo + ",pageSize=" + pageSize);
 
         if (pageNo < 0) {
             pageNo = 1;
@@ -45,14 +44,12 @@ public class CourseController {
             return ResponseMessage.error("数据为空");
         }
         List<CourseDTO> courseDTOS = CopyUtil.toList(courses, CourseDTO.class);
-        log.info("方法执行结束，方法返回值为：" + courseDTOS);
-        return ResponseMessage.ok().put("courseDTOS", courseDTOS);
+        return ResponseMessage.success("courseDTOS", courseDTOS);
     }
 
     @ApiOperation("根据课程编号查询课程信息")
     @GetMapping("/{couId}")
     public ResponseMessage readCourse(@PathVariable(name = "couId",required = true) Long couId) {
-        log.info("readCourse方法开始执行,参数为：couId=" + couId);
         if(ObjectUtils.isEmpty(couId)){
             return ResponseMessage.error("参数为空");
         }
@@ -62,13 +59,12 @@ public class CourseController {
         }
         CourseDTO courseDTO = CopyUtil.to(course, CourseDTO.class);
         log.info("readCourse方法执行结束，方法返回值为：" + courseDTO);
-        return ResponseMessage.ok().put("courseDTOS", courseDTO);
+        return ResponseMessage.success("courseDTOS", courseDTO);
     }
 
     @ApiOperation("添加课程")
     @PostMapping("/save")
     public ResponseMessage saveCourse(@RequestBody CourseDTO courseDTO){
-        log.info("readCourse方法开始执行,参数为：courseDTO=" + courseDTO);
         if(ObjectUtils.isEmpty(courseDTO)){
             return ResponseMessage.error("参数为空，请输入参数");
         }
@@ -78,14 +74,12 @@ public class CourseController {
         if(saveCourse == null){
             return ResponseMessage.error("添加失败");
         }
-        log.info("saveCourse方法执行结束");
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("批量添加课程")
     @PostMapping(value = "/batchSave")
     public ResponseMessage batchSaveCourse(@RequestBody List<CourseDTO> courseDTOs){
-        log.info("batchSaveCourse方法开始执行,参数为：courseDTOs=" + courseDTOs);
 
         if(CollectionUtils.isEmpty(courseDTOs)){
             return ResponseMessage.error("参数为空，请输入参数");
@@ -96,9 +90,8 @@ public class CourseController {
         if(CollectionUtils.isEmpty(saveCourse)){
             return ResponseMessage.error("添加失败");
         }
-        log.info("batchSaveCourse方法执行结束");
 
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("删除课程")
@@ -113,7 +106,7 @@ public class CourseController {
         courseService.deleteCourse(id);
         log.info("deleteCourse方法执行结束");
 
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 
     @ApiOperation("批量删除课程")
@@ -127,7 +120,7 @@ public class CourseController {
 
         courseService.batchDeleteCourse(ids);
         log.info("batchDeleteCourse方法执行结束");
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 
 

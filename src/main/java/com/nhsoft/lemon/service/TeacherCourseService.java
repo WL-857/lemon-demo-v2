@@ -17,7 +17,7 @@ public interface TeacherCourseService {
      * @param pageSize
      * @return
      */
-    List<TeacherExtend> listTeacherCourse(int pageNo,int pageSize);
+    List<TeacherExtend> list(int pageNo,int pageSize);
 
 
     /**
@@ -25,24 +25,24 @@ public interface TeacherCourseService {
      * @param teacherCourse
      * @return
      */
-    TeacherCourse saveTeacherCourse(TeacherCourse teacherCourse);
+    TeacherCourse save(TeacherCourse teacherCourse);
 
     /**
      * 批量添加新的教师课程
      * @param teacherCourses
      * @return
      */
-    List<TeacherCourse> batchSaveTeacherCourse(List<TeacherCourse> teacherCourses);
+    List<TeacherCourse> batchSave(List<TeacherCourse> teacherCourses);
 
     /**
      * 删除教师课程
      * @param teacherCourse
      */
-    void deleteTeacherCourse(TeacherCourse teacherCourse);
+    void delete(TeacherCourse teacherCourse);
 
     /**
      * 批量删除教师课程
      * @param teacherCourses
      */
-    void batchDeleteTeacherCourse(List<TeacherCourse> teacherCourses);
+    void batchDelete(List<TeacherCourse> teacherCourses);
 }

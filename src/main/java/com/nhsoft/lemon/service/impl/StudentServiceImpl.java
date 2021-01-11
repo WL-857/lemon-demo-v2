@@ -3,11 +3,13 @@ package com.nhsoft.lemon.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhsoft.lemon.config.RedisKey;
+import com.nhsoft.lemon.exception.GlobalException;
 import com.nhsoft.lemon.repository.StudentDao;
 import com.nhsoft.lemon.dto.StudentDTO;
 
 import com.nhsoft.lemon.model.Student;
 import com.nhsoft.lemon.service.StudentService;
+import com.nhsoft.lemon.utils.PageUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -29,16 +31,14 @@ public class StudentServiceImpl implements StudentService {
     @Resource
     private RedisTemplate redisTemplate;
 
+    @Resource(name = "objectMapper")
+    private ObjectMapper objectMapper;
 
     @Override
     public List<Student> listAllStudent(int pageNo, int pageSize) {
-        if (pageNo <= 0) {
-            pageNo = 1;
-        }
-        if (pageSize <= 0) {
-            pageSize = 5;
-        }
-        List<Student> students = studentDao.listAllStudent(pageNo,pageSize);
+        PageUtil pageUtil = new PageUtil();
+        PageUtil check = pageUtil.check(pageNo, pageSize);
+        List<Student> students = studentDao.listAllStudent(check.getOffset(),check.getRows());
         return students;
     }
 
@@ -51,13 +51,12 @@ public class StudentServiceImpl implements StudentService {
     public Student saveStudent(Student student) {
         Student save = studentDao.saveStudent(student);
         if (ObjectUtils.isEmpty(save)) {
-            return save;
+            throw new GlobalException("数据库中已存在该记录");
         }
-        Long stuId = save.getStuId();
+        Long stuId = save.getStudentId();
         String studentKey = RedisKey.STUDENT_KEY + stuId;
         Object studentValue = redisTemplate.opsForValue().get(studentKey);
 
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             String studentJson = objectMapper.writeValueAsString(student);
             if (studentValue == null) {
@@ -74,10 +73,9 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> batchSaveStudent(List<Student> students) {
         List<Student> studentList = studentDao.batchSaveStudent(students);
         students.forEach(student -> {
-            String studentKey = RedisKey.COURSE_KEY + student.getStuId();
+            String studentKey = RedisKey.COURSE_KEY + student.getStudentId();
             Object value = redisTemplate.opsForValue().get(studentKey);
 
-            ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String studentJson = objectMapper.writeValueAsString(student);
                 if (value == null) {
@@ -95,11 +93,12 @@ public class StudentServiceImpl implements StudentService {
         String studentKey = RedisKey.STUDENT_KEY + id;
         Object value = redisTemplate.opsForValue().get(studentKey);
         if (value != null) {
-
             redisTemplate.delete(studentKey);
         }
         if (studentDao.readStudent(id) != null) {
             studentDao.deleteStudent(id);
+        }else{
+            throw new GlobalException("数据库中不存在该条记录");
         }
     }
 
@@ -118,7 +117,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student updateStudent(Student student) {
-
+        String studentKey = RedisKey.STUDENT_KEY + student.getStudentId();
+        redisTemplate.opsForValue().set(studentKey,student);
         return studentDao.updateStudent(student);
     }
 }

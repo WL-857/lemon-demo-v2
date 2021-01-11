@@ -3,11 +3,13 @@ package com.nhsoft.lemon.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhsoft.lemon.config.RedisKey;
+import com.nhsoft.lemon.exception.GlobalException;
 import com.nhsoft.lemon.repository.TeacherDao;
 import com.nhsoft.lemon.dto.TeacherDTO;
 
 import com.nhsoft.lemon.model.Teacher;
 import com.nhsoft.lemon.service.TeacherService;
+import com.nhsoft.lemon.utils.PageUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -28,16 +30,14 @@ public class TeacherServiceImpl implements TeacherService {
     @Resource
     private RedisTemplate redisTemplate;
 
+    @Resource(name = "objectMapper")
+    private ObjectMapper objectMapper;
+
     @Override
     public List<Teacher> listAllTeacher(int pageNo, int pageSize) {
-        if (pageNo <= 0) {
-            pageNo = 1;
-        }
-        if (pageSize <= 0) {
-            pageSize = 5;
-        }
-        PageRequest page = PageRequest.of(pageNo-1, pageSize);
-        List<Teacher> teachers = teacherDao.listAllTeacher(page);
+        PageUtil pageUtil = new PageUtil();
+        PageUtil check = pageUtil.check(pageNo, pageSize);
+        List<Teacher> teachers = teacherDao.listAllTeacher(check.getOffset(),check.getRows());
         return teachers;
     }
 
@@ -48,15 +48,17 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher saveTeacher(Teacher teacher) {
-        Teacher save = teacherDao.save(teacher);
-        Long teachId = save.getTeachId();
+        Teacher save = teacherDao.saveTeacher(teacher);
+        if(save == null){
+            throw new GlobalException("数据库中已存在该条记录");
+        }
+        Long teachId = save.getTeacherId();
         String teacherKey = RedisKey.TEACHER_KEY + teachId;
         Object teacherValue = redisTemplate.opsForValue().get(teacherKey);
 
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             String teacherJson = objectMapper.writeValueAsString(teacher);
-            if(teacherJson == null){
+            if(teacherValue == null){
                 redisTemplate.opsForValue().set(teacherKey,teacherJson);
             }
         } catch (JsonProcessingException e) {
@@ -67,13 +69,12 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> batchSaveTeacher(List<Teacher> teachers) {
-        List<Teacher> teacherList = teacherDao.saveAll(teachers);
+        List<Teacher> teacherList = teacherDao.batchSaveTeacher(teachers);
 
         teachers.forEach(teacher -> {
-            String teacherKey = RedisKey.TEACHER_KEY + teacher.getTeachId();
+            String teacherKey = RedisKey.TEACHER_KEY + teacher.getTeacherId();
             Object value = redisTemplate.opsForValue().get(teacherKey);
 
-            ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String teacherJson = objectMapper.writeValueAsString(teacher);
                 if (value == null) {
@@ -95,9 +96,10 @@ public class TeacherServiceImpl implements TeacherService {
         }
         if (teacherDao.readTeacher(id) != null) {
 
-            teacherDao.deleteById(id);
+            teacherDao.deleteTeacher(id);
+        }else {
+            throw new GlobalException("数据库中没有该条记录");
         }
-
     }
 
     @Override
@@ -108,9 +110,7 @@ public class TeacherServiceImpl implements TeacherService {
             if (value != null) {
                 redisTemplate.delete(teacherKey);
             }
-            if (teacherDao.readTeacher(id) != null) {
-                teacherDao.deleteById(id);
-            }
         });
+        teacherDao.batchDeleteTeacher(ids);
     }
 }

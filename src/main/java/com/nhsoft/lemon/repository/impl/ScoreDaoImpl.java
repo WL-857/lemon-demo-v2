@@ -26,11 +26,11 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
         Join<Object, Object> studentJoin = root.join("student", JoinType.LEFT);
         query.multiselect(
                 root.get("grade"),
-                courseJoin.get("couName"),
+                courseJoin.get("courseName"),
                 root.get("time"),
-                studentJoin.get("stuName")
+                studentJoin.get("studentName")
         );
-        Predicate studentNo = criteriaBuilder.equal(studentJoin.get("stuNo"), stuNo);
+        Predicate studentNo = criteriaBuilder.equal(studentJoin.get("studentNo"), stuNo);
         Predicate time = criteriaBuilder.equal(root.get("time"), year);
         Predicate predicate = criteriaBuilder.and(studentNo, time);
         query.where(predicate);
@@ -46,12 +46,12 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
         Join<Object, Object> courseJoin = root.join("course", JoinType.LEFT);
         Join<Object, Object> teacherCourseJoin = root.join("teacher_course_mapping", JoinType.LEFT);
         query.multiselect(
-                courseJoin.get("couName"),
+                courseJoin.get("courseName"),
                 criteriaBuilder.max(root.get("grade")),
                 criteriaBuilder.min(root.get("grade")),
                 criteriaBuilder.avg(root.get("grade"))
         );
-        Predicate teacherId = criteriaBuilder.equal(teacherCourseJoin.get("teachId"), teachId);
+        Predicate teacherId = criteriaBuilder.equal(teacherCourseJoin.get("teacherId"), teachId);
         Predicate time = criteriaBuilder.equal(root.get("time"), year);
         Predicate predicate = criteriaBuilder.and(teacherId, time);
         query.where(predicate);
@@ -67,7 +67,7 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
         Join<Object, Object> courseJoin = root.join("course", JoinType.LEFT);
         Join<Object, Object> studentJoin = root.join("student", JoinType.LEFT);
         query.multiselect(
-                courseJoin.get("couName"),
+                courseJoin.get("courseName"),
                 criteriaBuilder.max(root.get("grade")),
                 criteriaBuilder.min(root.get("grade")),
                 criteriaBuilder.avg(root.get("grade"))
@@ -87,9 +87,9 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
         Join<Object, Object> studentJoin = root.join("student", JoinType.LEFT);
         query.multiselect(
                 courseJoin.get("grade"),
-                root.get("couName"),
+                root.get("courseName"),
                 root.get("time"),
-                studentJoin.get("stuName")
+                studentJoin.get("studentName")
         );
         TypedQuery<ScoreExtend> typedQuery = entityManager.createQuery(query);
         typedQuery.setFirstResult(pageNo);
@@ -107,11 +107,11 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
         Join<Object, Object> studentJoin = root.join("student", JoinType.LEFT);
         query.multiselect(
                 root.get("grade"),
-                courseJoin.get("couName"),
+                courseJoin.get("courseName"),
                 root.get("time"),
-                studentJoin.get("stuName")
+                studentJoin.get("studentName")
         );
-        Predicate scoId = criteriaBuilder.equal(root.get("scoId"), id);
+        Predicate scoId = criteriaBuilder.equal(root.get("scoreId"), id);
         query.where(scoId);
         ScoreExtend scoreExtend = entityManager.createQuery(query).getSingleResult();
         return scoreExtend;
@@ -133,7 +133,7 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
 
     @Override
     public int deleteScore(Long id) {
-        String sql = "delete from Score where scoId = :id";
+        String sql = "delete from Score where scoreId = :id";
         Query query = entityManager.createQuery(sql);
         query.setParameter("id", id);
         int i = query.executeUpdate();
@@ -142,7 +142,7 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
 
     @Override
     public void batchDeleteScore(List<Long> ids) {
-        String sql = "delete from Score where scoId = :id";
+        String sql = "delete from Score where scoreId = :id";
         Query query = entityManager.createQuery(sql);
         ids.forEach(id -> {
             query.setParameter("id", id);

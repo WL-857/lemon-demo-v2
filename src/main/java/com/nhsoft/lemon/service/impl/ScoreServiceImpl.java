@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhsoft.lemon.config.RedisKey;
 import com.nhsoft.lemon.dto.ScoreDTO;
+import com.nhsoft.lemon.exception.GlobalException;
 import com.nhsoft.lemon.model.Course;
 import com.nhsoft.lemon.model.Score;
 import com.nhsoft.lemon.model.Student;
@@ -12,6 +13,7 @@ import com.nhsoft.lemon.model.extend.TeacherExtend;
 import com.nhsoft.lemon.repository.ScoreDao;
 import com.nhsoft.lemon.service.ScoreService;
 import com.nhsoft.lemon.utils.CopyUtil;
+import com.nhsoft.lemon.utils.PageUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -37,26 +39,25 @@ public class ScoreServiceImpl implements ScoreService {
     @Resource
     private RedisTemplate redisTemplate;
 
+    @Resource(name = "objectMapper")
+    private ObjectMapper objectMapper;
+
     @Override
     public List<ScoreExtend> listAllScore(int pageNo, int pageSize) {
-        if (pageNo <= 0) {
-            pageNo = 1;
-        }
-        if (pageSize <= 0) {
-            pageSize = 5;
-        }
-        List<ScoreExtend> scoreExtends = scoreDao.listAllScore(pageNo,pageSize);
+        PageUtil pageUtil = new PageUtil();
+        PageUtil check = pageUtil.check(pageNo, pageSize);
+        List<ScoreExtend> scoreExtends = scoreDao.listAllScore(check.getOffset(),check.getRows());
         return scoreExtends;
     }
 
     @Override
     public List<ScoreExtend> listStudentAllGrade(String stuNo, String time) {
         if (StringUtils.isEmpty(stuNo) || StringUtils.isEmpty(time)) {
-            return new ArrayList<ScoreExtend>();
+            throw new GlobalException("参数为空");
         }
         List<ScoreExtend> scoreExtends = scoreDao.listStudentAllGrade(stuNo, time);
         if(CollectionUtils.isEmpty(scoreExtends)){
-            return new ArrayList<ScoreExtend>();
+            throw new GlobalException("数据库中没有记录");
         }
         return scoreExtends;
     }
@@ -65,11 +66,11 @@ public class ScoreServiceImpl implements ScoreService {
     public List<TeacherExtend> listMaxMinAvgScore(Long teachId, String year) {
 
             if (ObjectUtils.isEmpty(teachId) || StringUtils.isEmpty(year)) {
-                return new ArrayList<TeacherExtend>();
+                throw new GlobalException("参数为空");
             }
             List<TeacherExtend> scoreExtends = scoreDao.listMaxMinAvgScore(teachId, year);
             if(CollectionUtils.isEmpty(scoreExtends)){
-                return new ArrayList<TeacherExtend>();
+                throw new GlobalException("数据库中没有记录");
             }
             return scoreExtends;
 
@@ -79,11 +80,11 @@ public class ScoreServiceImpl implements ScoreService {
     @Override
     public List<TeacherExtend> listAllMaxMinAvgScore(String year) {
         if (StringUtils.isEmpty(year)) {
-            return new ArrayList<TeacherExtend>();
+            throw new GlobalException("参数为空");
         }
         List<TeacherExtend> teacherExtends = scoreDao.listAllMaxMinAvgScore(year);
         if(CollectionUtils.isEmpty(teacherExtends)){
-            return new ArrayList<TeacherExtend>();
+            throw new GlobalException("数据库中没有记录");
         }
         return teacherExtends;
     }
@@ -92,13 +93,12 @@ public class ScoreServiceImpl implements ScoreService {
     public Score saveScore(Score score) {
         Score save = scoreDao.saveScore(score);
         if (save == null) {
-            return save;
+            throw new GlobalException("数据库中已存在该记录");
         }
-        Long scoId = save.getScoId();
+        Long scoId = save.getScoreId();
         String scoreKey = RedisKey. SCORE_KEY+ scoId;
         Object scoreValue = redisTemplate.opsForValue().get(scoreKey);
 
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             String scoreJson = objectMapper.writeValueAsString(score);
             if (scoreValue == null) {
@@ -115,9 +115,8 @@ public class ScoreServiceImpl implements ScoreService {
     public List<Score> batchSaveScore(List<Score> scores) {
         List<Score> list = scoreDao.batchSaveScore(scores);
         list.forEach(course -> {
-            String scoreKey = RedisKey.SCORE_KEY + course.getCouId();
+            String scoreKey = RedisKey.SCORE_KEY + course.getCourseId();
             Object value = redisTemplate.opsForValue().get(scoreKey);
-            ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String scoreJson = objectMapper.writeValueAsString(course);
                 if (value == null) {
@@ -141,6 +140,8 @@ public class ScoreServiceImpl implements ScoreService {
         }
         if (scoreDao.readScore(id) != null) {
             i = scoreDao.deleteScore(id);
+        }else{
+            throw new GlobalException("数据库中不存在该条记录");
         }
         return i;
     }
@@ -159,11 +160,17 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public Score updateScore(Score score) {
+        String scoreKey = RedisKey.SCORE_KEY + score.getCourseId();
+        redisTemplate.opsForValue().set(scoreKey,score);
         return scoreDao.updateScore(score);
     }
 
     @Override
     public ScoreExtend readScore(Long id) {
-        return scoreDao.readScore(id);
+        ScoreExtend scoreExtend = scoreDao.readScore(id);
+        if(ObjectUtils.isEmpty(scoreExtend)){
+            throw new GlobalException("数据库中没有该条记录");
+        }
+        return scoreExtend;
     }
 }

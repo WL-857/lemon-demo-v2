@@ -27,25 +27,25 @@ public class Teacher implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long teachId;
+    private Long teacherId;
 
     /**
      * 教师姓名
      */
 
-    private String teachName;
+    private String teacherName;
 
     /**
      * 教师编号
      */
 
-    private String teachNo;
+    private String teacherNo;
 
     /**
      * 教师手机号
      */
 
-    private String teachPhone;
+    private String teacherPhone;
 
     @ManyToMany(cascade = CascadeType.ALL)
     //joinColumn：当前类的主键，inverseJoinColumns：关联类的主键

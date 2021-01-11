@@ -9,6 +9,8 @@
 package com.nhsoft.lemon.response;
 
 
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,47 +19,79 @@ import java.util.Map;
  *
  * @author wanglei
  */
-public class ResponseMessage extends HashMap<String, Object> {
+@Data
+public class ResponseMessage {
 	private static final long serialVersionUID = 1L;
-	
+	/**
+	 * 响应代码
+	 */
+	private int code;
+
+	/**
+	 * 响应消息
+	 */
+	private String message;
+
+	/**
+	 * 响应结果
+	 */
+	private Object result;
+
 	public ResponseMessage() {
-		put("code", 0);
-		put("msg", "success");
-	}
-	
-	public static ResponseMessage error() {
-		return error(StatusEnum.FAIL.getCode(), StatusEnum.FAIL.getMessage());
-	}
-	
-	public static ResponseMessage error(String msg) {
-		return error(StatusEnum.FAIL.getCode(), msg);
-	}
-	
-	public static ResponseMessage error(int code, String msg) {
-		ResponseMessage responseMessage = new ResponseMessage();
-		responseMessage.put("code", code);
-		responseMessage.put("msg", msg);
-		return responseMessage;
 	}
 
-	public static ResponseMessage ok(String msg) {
-		ResponseMessage responseMessage = new ResponseMessage();
-		responseMessage.put("msg", msg);
-		return responseMessage;
-	}
-	
-	public static ResponseMessage ok(Map<String, Object> map) {
-		ResponseMessage responseMessage = new ResponseMessage();
-		responseMessage.putAll(map);
-		return responseMessage;
-	}
-	
-	public static ResponseMessage ok() {
-		return new ResponseMessage();
+	public ResponseMessage(int code, String message, Object result) {
+		this.code = code;
+		this.message = message;
+		this.result = result;
 	}
 
-	public ResponseMessage put(String key, Object value) {
-		super.put(key, value);
-		return this;
+	/**
+	 * 成功时响应
+	 * @param data
+	 * @return
+	 */
+	public static ResponseMessage success(Object data) {
+		ResponseMessage resp = new ResponseMessage();
+		resp.setCode(StatusEnum.SUCCESS.getCode());
+		resp.setMessage(StatusEnum.SUCCESS.getMessage());
+		resp.setResult(data);
+		return resp;
 	}
+
+	public static ResponseMessage success(String msg,Object data) {
+		ResponseMessage resp = new ResponseMessage();
+		resp.setCode(StatusEnum.SUCCESS.getCode());
+		resp.setMessage(msg);
+		resp.setResult(data);
+		return resp;
+	}
+	/**
+	 * 失败响应
+	 * @return
+	 */
+	public static ResponseMessage error(){
+		ResponseMessage resp = new ResponseMessage();
+		resp.setCode(StatusEnum.SUCCESS.getCode());
+		resp.setMessage(StatusEnum.SUCCESS.getMessage());
+		resp.setResult(null);
+		return resp;
+	}
+
+	public static ResponseMessage error(int code, String message) {
+		ResponseMessage resp = new ResponseMessage();
+		resp.setCode(code);
+		resp.setMessage(message);
+		resp.setResult(null);
+		return resp;
+	}
+
+	public static ResponseMessage error(String message) {
+		ResponseMessage resp = new ResponseMessage();
+		resp.setCode(-1);
+		resp.setMessage(message);
+		resp.setResult(null);
+		return resp;
+	}
+
 }

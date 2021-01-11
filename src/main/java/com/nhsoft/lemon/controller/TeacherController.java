@@ -52,7 +52,7 @@ public class TeacherController {
             return ResponseMessage.error("数据为空");
         }
         List<TeacherDTO> teacherDTOS = CopyUtil.toList(teachers, TeacherDTO.class);
-        return ResponseMessage.ok().put("teacherDTOS", teacherDTOS);
+        return ResponseMessage.success("teacherDTOS", teacherDTOS);
     }
 
     @ApiOperation("教师查询其所教授科目的成绩最大值，最小值，平均值")
@@ -66,7 +66,7 @@ public class TeacherController {
         }
         List<AvgMaxMinDTO> avgMaxMinDTOS = CopyUtil.toList(scoreExtends, AvgMaxMinDTO.class);
 
-        return ResponseMessage.ok().put("avgMaxMinDTOS",avgMaxMinDTOS);
+        return ResponseMessage.success("avgMaxMinDTOS",avgMaxMinDTOS);
 
     }
 
@@ -80,7 +80,7 @@ public class TeacherController {
         }
 
         List<AvgMaxMinDTO> avgMaxMinDTOS = CopyUtil.toList(teacherExtends, AvgMaxMinDTO.class);
-        return ResponseMessage.ok().put("avgMaxMinDTOS",avgMaxMinDTOS);
+        return ResponseMessage.success("avgMaxMinDTOS",avgMaxMinDTOS);
     }
 
     @ApiOperation("根据id查询教师信息")
@@ -96,7 +96,7 @@ public class TeacherController {
         }
         TeacherDTO teacherDTO = CopyUtil.to(teacher, TeacherDTO.class);
         log.info("readCourse方法执行结束，方法返回值为：" + teacherDTO);
-        return ResponseMessage.ok().put("studentDTO", teacherDTO);
+        return ResponseMessage.success("studentDTO", teacherDTO);
     }
 
     @ApiOperation("添加教师")
@@ -114,7 +114,7 @@ public class TeacherController {
             return ResponseMessage.error("添加失败");
         }
         log.info("saveTeacher方法执行结束");
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("批量添加教师")
@@ -133,7 +133,7 @@ public class TeacherController {
         }
         log.info("batchSaveTeacher方法执行结束");
 
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("删除教师")
@@ -148,7 +148,7 @@ public class TeacherController {
         teacherService.deleteTeacher(id);
         log.info("deleteStudent方法执行结束");
 
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 
     @ApiOperation("批量删除教师")
@@ -162,6 +162,6 @@ public class TeacherController {
 
         teacherService.batchDeleteTeacher(ids);
         log.info("batchDeleteTeacher方法执行结束");
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 }

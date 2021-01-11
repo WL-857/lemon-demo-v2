@@ -43,13 +43,13 @@ public class TeacherCourseController {
         if (pageSize <= 0) {
             pageSize = 5;
         }
-        List<TeacherExtend> teacherCourses = teacherCourseService.listTeacherCourse(pageNo, pageSize);
+        List<TeacherExtend> teacherCourses = teacherCourseService.list(pageNo, pageSize);
         if (CollectionUtils.isEmpty(teacherCourses)) {
             return ResponseMessage.error("数据为空");
         }
         List<TeacherCourseDTO> teacherCourseDTOS = CopyUtil.toList(teacherCourses, TeacherCourseDTO.class);
         log.info("方法执行结束，方法返回值为：" + teacherCourseDTOS);
-        return ResponseMessage.ok().put("courseDTOS", teacherCourseDTOS);
+        return ResponseMessage.success("courseDTOS", teacherCourseDTOS);
     }
 
     @ApiOperation("添加教师课程")
@@ -61,12 +61,12 @@ public class TeacherCourseController {
         }
         TeacherCourse teacherCourse = CopyUtil.to(teacherCourseDTO, TeacherCourse.class);
 
-        TeacherCourse saveTeacherCourse = teacherCourseService.saveTeacherCourse(teacherCourse);
+        TeacherCourse saveTeacherCourse = teacherCourseService.save(teacherCourse);
         if (saveTeacherCourse == null) {
             return ResponseMessage.error("添加失败");
         }
         log.info("saveTeacherCourse方法执行结束");
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("批量添加教师课程")
@@ -79,13 +79,13 @@ public class TeacherCourseController {
         }
         List<TeacherCourse> teacherCourses = CopyUtil.toList(teacherCourseDTOS, TeacherCourse.class);
 
-        List<TeacherCourse> saveTeacherCourse = teacherCourseService.batchSaveTeacherCourse(teacherCourses);
+        List<TeacherCourse> saveTeacherCourse = teacherCourseService.batchSave(teacherCourses);
         if (CollectionUtils.isEmpty(saveTeacherCourse)) {
             return ResponseMessage.error("添加失败");
         }
         log.info("batchSaveTeacherCourse方法执行结束");
 
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("删除教师课程")
@@ -97,10 +97,10 @@ public class TeacherCourseController {
             return ResponseMessage.error("参数为空，请输入参数");
         }
         TeacherCourse teacherCourse = CopyUtil.to(teacherCourseDTO, TeacherCourse.class);
-        teacherCourseService.deleteTeacherCourse(teacherCourse);
+        teacherCourseService.delete(teacherCourse);
         log.info("deleteTeacherCourse方法执行结束");
 
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 
     @ApiOperation("批量删除教师课程")
@@ -112,9 +112,9 @@ public class TeacherCourseController {
             return ResponseMessage.error("参数为空，请输入参数");
         }
         List<TeacherCourse> teacherCourses = CopyUtil.toList(teacherCourseDTOS, TeacherCourse.class);
-        teacherCourseService.batchDeleteTeacherCourse(teacherCourses);
+        teacherCourseService.batchDelete(teacherCourses);
         log.info("batchDeleteTeacherCourse方法执行结束");
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 
 

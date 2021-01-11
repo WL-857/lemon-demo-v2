@@ -54,7 +54,7 @@ public class StudentController {
         }
         List<StudentDTO> studentDTOS = CopyUtil.toList(students, StudentDTO.class);
         log.info("方法执行结束，方法返回值为：" + studentDTOS);
-        return ResponseMessage.ok().put("studentDTOS", studentDTOS);
+        return ResponseMessage.success("studentDTOS", studentDTOS);
     }
 
     @ApiOperation("根据学号查询学生所有的成绩")
@@ -67,7 +67,7 @@ public class StudentController {
         List<ScoreExtend> scoreExtends = scoreService.listStudentAllGrade(stuNo, year);
         List<ScoreDTO> scoreDTOS = CopyUtil.toList(scoreExtends, ScoreDTO.class);
 
-        return ResponseMessage.ok().put("scoreDTOS",scoreDTOS);
+        return ResponseMessage.success("scoreDTOS",scoreDTOS);
     }
 
     @ApiOperation("根据id查询学生信息")
@@ -83,7 +83,7 @@ public class StudentController {
         }
         StudentDTO studentDTO = CopyUtil.to(student, StudentDTO.class);
         log.info("readCourse方法执行结束，方法返回值为：" + studentDTO);
-        return ResponseMessage.ok().put("studentDTO", studentDTO);
+        return ResponseMessage.success("studentDTO", studentDTO);
     }
 
     @ApiOperation("添加学生")
@@ -100,7 +100,7 @@ public class StudentController {
             return ResponseMessage.error("添加失败");
         }
         log.info("saveStudent方法执行结束");
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("批量添加学生")
@@ -119,7 +119,7 @@ public class StudentController {
         }
         log.info("batchSaveStudent方法执行结束");
 
-        return ResponseMessage.ok("添加成功");
+        return ResponseMessage.success("添加成功");
     }
 
     @ApiOperation("删除学生")
@@ -134,7 +134,7 @@ public class StudentController {
         studentService.deleteStudent(id);
         log.info("deleteStudent方法执行结束");
 
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 
     @ApiOperation("批量删除课程")
@@ -148,6 +148,6 @@ public class StudentController {
 
         studentService.batchDeleteStudent(ids);
         log.info("batchDeleteCourse方法执行结束");
-        return ResponseMessage.ok("删除成功");
+        return ResponseMessage.success("删除成功");
     }
 }

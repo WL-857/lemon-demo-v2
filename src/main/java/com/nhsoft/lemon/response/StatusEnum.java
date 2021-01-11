@@ -7,8 +7,9 @@ package com.nhsoft.lemon.response;
 public enum StatusEnum {
 
     SUCCESS(200,"操作成功"),
-    FAIL(300,"操作失败");
-
+    FAIL(300,"操作失败"),
+    NO_OBJECT(400,"没有该对象"),
+    NO_PARAMETER(401,"参数为空");
     private int code;
 
     private String message;

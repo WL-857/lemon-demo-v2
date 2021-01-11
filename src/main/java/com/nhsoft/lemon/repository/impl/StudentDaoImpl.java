@@ -52,7 +52,7 @@ public class StudentDaoImpl extends BaseDao implements StudentDao {
 
     @Override
     public int deleteStudent(Long id) {
-        String sql = "delete from Student where stuId = :id";
+        String sql = "delete from Student where studentId = :id";
         Query query = entityManager.createQuery(sql);
         query.setParameter("id", id);
         int i = query.executeUpdate();
@@ -61,7 +61,7 @@ public class StudentDaoImpl extends BaseDao implements StudentDao {
 
     @Override
     public void batchDeleteStudent(List<Long> ids) {
-        String sql = "delete from Student where stuId = :id";
+        String sql = "delete from Student where studentId = :id";
         Query query = entityManager.createQuery(sql);
         ids.forEach(id -> {
             query.setParameter("id", id);
